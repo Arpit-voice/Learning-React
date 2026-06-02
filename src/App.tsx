@@ -1,65 +1,34 @@
+import axios from "axios";
+import { useState } from "react"
+//only the first time this will get rendered
+// like data will be intialised to []
+// in all future re renders , it will not get re-initialised
 
-
+let count =1;
+// react only re-renders component only if a "state variable" changes
 function App() {
-////can write here JS(99% of the time ) or html
-
-  // now  lets say we imported response.data.post from axios which will simply look like this--
-  const post = [{
-    title : "IIT BHU",
-    description :  "we are the best in the world"
-  },{
-    title : "IIT DELHI",
-    description :  "we are the face of IITs"
-  }]
-
-  // setInterval(() => {
-  //   console.log("interval ran")
-  //   post.push({
-  //     title : "IIT Dhanbad" ,
-  //     description: "have u heard of Mining Engg"
-  //   })
-  //   console.log(post)
-  // },1000);
-////thins thing is not getting rerendered on the website
+    let [data, setData] = useState([]);//////this returns u an array containing one array and one fn
 
 
-  let postcomponents = post.map(p=><Post title ={p.title} description = {p.description}/> )  
-  //convert object to component thing using map
-
-  return (
-   <div>
-    <h1>
-      hi there
-    </h1>
-
-    {postcomponents}
-  
-    <Post title ="IIT BOMBAY" description = "I am a joke to u guys"/>
-    <Post title ="IIT MANDI" description = "we are enjoying the real college life"/>
-
-    {post.map(p=><Post title ={p.title} description = {p.description}/> ) }
-
-   </div>
-  )
-}
+    console.log ("no of renders " + count++)
+    // setTimeout(() => {
+    //   setData([...data , { title : "hi there " + Math.random()}])
+    // },3000);
+    axios.get("https://jsonplaceholder.typicode.com/todos")
+      .then((response)=>{
+        setData(response.data)
+      })
     
-///props= {title = "IIT BHU ", description : "we are the best in the world"}
 
-function Post(props){
-  return (
-    <div style={{ backgroundColor : "yellow", fontSize : 20 , border : "2px solid black" , borderRadius : 20 , padding : 20 , }}>
-      <div>
-        <b>{props.title}</b>
-      </div>
-
-      <div>
-        {props.description}
-      </div>
-
-    </div>
-  )
-
-
+  return <div>
+        {data.map(todo=> <TODO title ={todo.title} />)}
+  </div>
+} 
+    
+function TODO(props){
+  return <div style = {{margin : 20 , padding : 30 , border : "2px solid black" , borderRadius : 30}}>
+    {props.title}
+  </div>
 }
 
 export default App
